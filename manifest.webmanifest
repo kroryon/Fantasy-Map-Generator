@@ -1,18 +1,22 @@
 {
-  "background_color": "#fff",
+  "background_color": "#2c3e50",
   "display": "standalone",
   "orientation": "any",
-  "name": "Azgaar's Fantasy Map Generator",
-  "short_name": "Azgaar's Fantasy Map Generator",
-  "description": "Web application generating interactive and highly customizable maps",
-  "scope": "/Fantasy-Map-Generator/",
-  "start_url": "/Fantasy-Map-Generator/?source=pwa",
-  "url": "https://azgaar.github.io/Fantasy-Map-Generator",
+  "name": "Fantasy Map Generator",
+  "short_name": "FMG",
+  "description": "Azgaar's Fantasy Map Generator - Desktop & Mobile Edition",
+  "scope": "./",
+  "start_url": "./",
+  "theme_color": "#5e4fa2",
+  "categories": ["games", "utilities", "productivity"],
+  "prefer_related_applications": false,
+  "display_override": ["standalone", "minimal-ui"],
   "icons": [
     {
       "src": "images/icons/icon_x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "images/icons/maskable_icon_x512.png",
@@ -37,6 +41,15 @@
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "New Map",
+      "short_name": "New",
+      "description": "Generate a new fantasy map",
+      "url": "./?action=new"
     }
   ]
 }

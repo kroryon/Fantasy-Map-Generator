@@ -1,0 +1,160 @@
+/* OPTIMIZED MOBILE DROPDOWN FIX FOR FANTASY MAP GENERATOR */
+/* Optimizado para WebView con User-Agent de Firefox */
+
+/* Add scroll to tab content when it gets too long */
+.tabcontent {
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    /* Reducido para Firefox-like WebView */
+    padding-top: 30px;
+    margin-top: 15px;
+}
+
+/* Ensure options menu doesn't exceed screen height */
+#options {
+    max-height: 90vh;
+    overflow: visible;
+}
+
+/* Better scrollbars for mobile - Firefox style */
+.tabcontent {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(94, 79, 162, 0.6) rgba(0,0,0,0.1);
+}
+
+/* Webkit scrollbar fallback for other engines */
+.tabcontent::-webkit-scrollbar {
+    width: 8px;
+}
+
+.tabcontent::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+}
+
+.tabcontent::-webkit-scrollbar-thumb {
+    background: rgba(94, 79, 162, 0.6);
+    border-radius: 4px;
+}
+
+.tabcontent::-webkit-scrollbar-thumb:hover {
+    background: rgba(94, 79, 162, 0.8);
+}
+
+/* REASONABLE SPACING FOR DROPDOWN ELEMENTS */
+select {
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 20px 0 !important; /* Reasonable margins for Firefox-like behavior */
+    z-index: 1;
+    appearance: menulist;
+    -moz-appearance: menulist; /* Firefox-specific styling */
+    -webkit-appearance: menulist; /* Webkit fallback */
+}
+
+/* Moderate spacing for dropdown problem areas */
+.tabcontent select {
+    margin-bottom: 40px !important; /* Much more reasonable for Firefox-like WebView */
+    margin-top: 20px !important;
+    padding-bottom: 15px !important;
+}
+
+/* Targeted spacing for specific dropdowns */
+#styleContent select,
+#layersContent select {
+    margin-bottom: 35px !important; /* Reasonable spacing */
+    margin-top: 20px !important;
+    min-height: 40px !important;
+    box-sizing: border-box !important;
+}
+
+/* Specific targeting for key selects */
+#layersPreset,
+#stylePreset,
+#styleElementSelect,
+#styleGroupSelect {
+    margin-bottom: 50px !important; /* Moderate spacing */
+    margin-top: 25px !important;
+}
+
+/* Style tab specific fixes */
+#styleContent {
+    padding-top: 50px !important; /* Reasonable spacing for style tab */
+    margin-top: 30px !important;
+}
+
+/* Reasonable spacing for elements that commonly have dropdowns */
+.tabcontent tr, .tabcontent table {
+    margin: 20px 0 !important;
+    padding: 10px 0 !important;
+}
+
+/* Moderate spacing between form elements */
+.tabcontent td {
+    padding: 15px 4px !important;
+}
+
+/* Style tab specific fixes - most problematic area */
+#styleContent table {
+    margin-top: 40px !important;
+}
+
+#styleContent tbody {
+    margin: 25px 0 !important;
+}
+
+/* Specific fixes for tab navigation area */
+.tab {
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Ensure tabs stay on top */
+    background: var(--bg-light);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Try to force dropdown to position correctly */
+select:focus, select:active {
+    position: relative;
+    z-index: 5;
+}
+
+/* Responsive adjustments for very small screens */
+@media screen and (max-height: 600px) {
+    .tabcontent {
+        max-height: 50vh;
+        padding-top: 40px;
+    }
+    
+    #styleContent {
+        padding-top: 60px !important;
+    }
+    
+    #options {
+        max-height: 70vh;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .tabcontent {
+        max-height: 60vh;
+        padding: 30px 8px 20px 8px;
+        margin-top: 20px;
+    }
+    
+    #styleContent {
+        padding-top: 40px !important;
+        margin-top: 25px !important;
+    }
+    
+    #options {
+        margin: 5px;
+    }
+    
+    /* Reasonable spacing on mobile */
+    .tabcontent p, .tabcontent div {
+        margin: 15px 0;
+    }
+}

@@ -1,0 +1,74 @@
+{
+  "name": "fantasy-map-generator",
+  "version": "1.0.0",
+  "description": "Azgaar's Fantasy Map Generator - Desktop & Mobile Application",
+  "main": "electron-main.js",
+  "homepage": "https://azgaar.github.io/Fantasy-Map-Generator",
+  "author": "Azgaar",
+  "keywords": [
+    "fantasy",
+    "map",
+    "generator",
+    "cartography",
+    "worldbuilding"
+  ],
+  "scripts": {
+    "electron": "electron .",
+    "electron-dev": "electron . --dev",
+    "build-win": "electron-packager . fantasy-map-generator --platform=win32 --arch=x64 --out=dist --overwrite",
+    "build-linux": "electron-packager . fantasy-map-generator --platform=linux --arch=x64 --out=dist --overwrite",
+    "build-desktop": "npm run build-win && npm run build-linux",
+    "prepare-android": "npm run copy-www && npm run ensure-android && npx cap sync android",
+    "ensure-android": "if not exist android (echo Adding Android platform... && npx cap add android) else (echo Android platform exists)",
+    "build-android": "npm run prepare-android && cd android && gradlew.bat assembleDebug",
+    "build-android-release": "npm run prepare-android && cd android && gradlew.bat assembleRelease",
+    "copy-www": "npm run create-www && npm run copy-files",
+    "create-www": "if not exist www mkdir www",
+    "copy-files": "copy index.html www\\ && copy main.js www\\ && copy index.css www\\ && copy icons.css www\\ && copy sw.js www\\ && copy versioning.js www\\ && copy manifest.webmanifest www\\ && copy mobile-compatibility.js www\\ && copy azgaar-touch-enhancements.js www\\ && copy mobile-dialog-scroll-fix.js www\\ && copy universal-scroll-fix.js www\\ && copy mobile-options-fix.css www\\ && xcopy charges www\\charges\\ /E /I /Y && xcopy components www\\components\\ /E /I /Y && xcopy config www\\config\\ /E /I /Y && xcopy heightmaps www\\heightmaps\\ /E /I /Y && xcopy images www\\images\\ /E /I /Y && xcopy libs www\\libs\\ /E /I /Y && xcopy modules www\\modules\\ /E /I /Y && xcopy styles www\\styles\\ /E /I /Y && xcopy utils www\\utils\\ /E /I /Y",
+    "clean": "if exist dist rmdir /s /q dist && if exist android rmdir /s /q android && if exist www rmdir /s /q www",
+    "clean-build": "npm run clean && npm run build-desktop",
+    "test-scripts": "echo Testing all build scripts... && npm run copy-www && echo WWW copy completed!",
+    "open-android": "npx cap open android"
+  },
+  "build": {
+    "appId": "com.azgaar.fantasy-map-generator",
+    "productName": "Fantasy Map Generator",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!node_modules",
+      "!dist",
+      "!.git",
+      "!.github",
+      "!.docker",
+      "!.vscode",
+      "!README.md",
+      "!LICENSE",
+      "!*.md"
+    ],
+    "win": {
+      "target": "dir",
+      "icon": "images/icons/icon_x512.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "images/icons/icon_x512.png",
+      "category": "Graphics"
+    },
+    "forceCodeSigning": false
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.6.0",
+    "electron-packager": "^17.1.2"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.3.0",
+    "@capacitor/cli": "^7.3.0",
+    "@capacitor/core": "^7.3.0",
+    "express": "^4.21.2"
+  }
+}

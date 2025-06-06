@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
 
     <title>Azgaar's Fantasy Map Generator</title>
     <meta name="application-name" content="Azgaar's Fantasy Map Generator" />
@@ -136,16 +136,20 @@
           transform: rotate(359deg);
         }
       }
-    </style>
-
+    </style>    
+    
     <link rel="preload" href="index.css?v=1.106.3" as="style" onload="this.onload=null; this.rel='stylesheet'" />
     <link rel="preload" href="icons.css" as="style" onload="this.onload=null; this.rel='stylesheet'" />
-    <link
+    <link rel="preload" href="mobile-options-fix.css" as="style" onload="this.onload=null; this.rel='stylesheet'" /><link
       rel="preload"
       href="libs/jquery-ui.css?v=1.106.5"
       as="style"
       onload="this.onload=null; this.rel='stylesheet'"
-    />
+    />    <!-- Mobile Compatibility Script v2.0 -->
+    <script src="mobile-compatibility-v2.js"></script>
+    <script src="azgaar-touch-enhancements.js"></script>
+    <script src="universal-scroll-fix.js"></script>
+    <script src="direct-options-scroll-fix.js"></script>
   </head>
   <body>
     <svg
@@ -4978,13 +4982,16 @@
               Temperature:
               <input id="aiGeneratorTemperature" type="number" min="-1" max="2" step=".1" class="icon-key" />
             </label>
-            <label for="aiGeneratorKey"
-              >Key:
+            <label for="aiGeneratorKey"              >Key:
               <input id="aiGeneratorKey" placeholder="Enter API key" class="icon-key" />
               <button
                 id="aiGeneratorKeyHelp"
                 class="icon-help-circled"
-                data-tip="Open provider's website to get the API key there. Note: the Map Genenerator doesn't store the key or any generated data"
+                data-tip="Open provider's website to get the API key there. Note: the Map Generator doesn't store the key or any generated data"
+              />
+              <div id="ollamaHint" style="display: none; font-size: 0.85em; color: #999; margin-top: 0.5em;">
+                Using Ollama requires it to be running locally on your machine at http://192.168.178.46:11434
+              </div>
               />
             </label>
           </div>

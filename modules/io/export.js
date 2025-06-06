@@ -1465,8 +1465,11 @@ function wrapInSvg(element, id, filename, {includeDefs, includeDefsRelief} = {})
   var svg = document.getElementById("map").cloneNode();
   svg.setAttribute("id", id);
   svg.setAttribute("fileName", filename);
-  svg.setAttribute("width", localStorage.getItem('mapWidth'));
-  svg.setAttribute("height", localStorage.getItem('mapHeight'));
+  // Use default values if localStorage values are null
+  const width = localStorage.getItem('mapWidth') || graphWidth || 960;
+  const height = localStorage.getItem('mapHeight') || graphHeight || 600;
+  svg.setAttribute("width", width);
+  svg.setAttribute("height", height);
   if (includeDefs && includeDefsRelief) {
     var d1 = document.getElementById("map").getElementsByTagName("defs")[0].cloneNode(true);
     var d2 = document.getElementById("defElements").getElementsByTagName("defs")[0].cloneNode(true);
@@ -1521,7 +1524,7 @@ async function prepareCK3() {
   xml.appendChild(ck3DrawFlatMap());
 
   xml.appendChild(ck3GeoJsonCells());
-  const {getFullDataJson} = await import("../dynamic/export-json.js?v=1.97.08");
+  const {getFullDataJson} = await import("../dynamic/export-json.js");
   xml.appendChild(wrapInXml(getFullDataJson(), "json", getFileName('Full')));
 
   const serializedMap = new XMLSerializer().serializeToString(xml);

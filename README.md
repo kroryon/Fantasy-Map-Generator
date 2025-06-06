@@ -1,14 +1,52 @@
-# Fantasy Map Generator
+# Fantasy Map Generator - Desktop & Mobile Edition
 
-Azgaar's _Fantasy Map Generator_ is a free web application that helps fantasy writers, game masters, and cartographers create and edit fantasy maps.
+Azgaar's _Fantasy Map Generator_ is a free web application that helps fantasy writers, game masters, and cartographers create and edit fantasy maps. This repository contains **desktop and mobile versions** of the generator.
 
-Link: [azgaar.github.io/Fantasy-Map-Generator](https://azgaar.github.io/Fantasy-Map-Generator).
+## 🌐 Original Web Version
+- **Live App**: [azgaar.github.io/Fantasy-Map-Generator](https://azgaar.github.io/Fantasy-Map-Generator)
+- **Documentation**: [Project Wiki](https://github.com/Azgaar/Fantasy-Map-Generator/wiki)
+- **Progress**: [Trello Board](https://trello.com/b/7x832DG4/fantasy-map-generator)
+- **Blog**: [Fantasy Maps for fun and glory](https://azgaar.wordpress.com)
 
-Refer to the [project wiki](https://github.com/Azgaar/Fantasy-Map-Generator/wiki) for guidance. The current progress is tracked in [Trello](https://trello.com/b/7x832DG4/fantasy-map-generator). Some details are covered in my old blog [_Fantasy Maps for fun and glory_](https://azgaar.wordpress.com).
+## 📱💻 Desktop & Mobile Versions
+
+This repository provides:
+- **Windows Desktop** (.exe executable)
+- **Linux Desktop** (native binary)
+- **Android Mobile** (.apk installer)
+
+### 🚀 Quick Start
+```bash
+# Clone and install
+git clone <repository-url>
+cd Fantasy-Map-Generator-Ck3
+npm install
+
+# Build desktop version
+npm run build-desktop
+
+# Build Android version (requires Android Studio)
+npm run build-android
+```
+
+### 📖 Complete Build Instructions
+**See [BUILD-README.md](BUILD-README.md) for detailed setup and build instructions.**
+
+The BUILD-README.md contains:
+- Complete prerequisites setup (Node.js, Android Studio, Java)
+- Step-by-step build instructions for all platforms
+- Troubleshooting guide for common issues
+- Environment variables setup
+- Distribution instructions
+
+## 🖼️ Screenshots
+
 
 [![preview](https://github.com/Azgaar/Fantasy-Map-Generator/assets/26469650/9502eae9-92e0-4d0d-9f17-a2ba4a565c01)](https://github.com/Azgaar/Fantasy-Map-Generator/assets/26469650/11a42446-4bd5-4526-9cb1-3ef97c868992)
 
+
 [![preview](https://github.com/Azgaar/Fantasy-Map-Generator/assets/26469650/e751a9e5-7986-4638-b8a9-362395ef7583)](https://github.com/Azgaar/Fantasy-Map-Generator/assets/26469650/e751a9e5-7986-4638-b8a9-362395ef7583)
+
 
 [![preview](https://github.com/Azgaar/Fantasy-Map-Generator/assets/26469650/b0d0efde-a0d1-4e80-8818-ea3dd83c2323)](https://github.com/Azgaar/Fantasy-Map-Generator/assets/26469650/b0d0efde-a0d1-4e80-8818-ea3dd83c2323)
 
@@ -27,3 +65,4 @@ _Inspiration:_
 - Amit Patel's [_Polygonal Map Generation for Games_](http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation)
 
 - Scott Turner's [_Here Dragons Abound_](https://heredragonsabound.blogspot.com)
+
