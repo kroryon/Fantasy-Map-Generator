@@ -1,20 +1,17 @@
 const { app, BrowserWindow, Menu, shell, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const http = require('http');
-const { URL } = require('url');
-
-let mainWindow;
-let server;
-let isPortableMode = false;
 
 // Intenta cargar express de forma segura
 let express;
 try {
   express = require('express');
 } catch (error) {
-  console.log('Express no está disponible, se usará un servidor HTTP básico en su lugar');
+  console.log('Express no está disponible, usando protocolo file:// en su lugar');
 }
+
+let mainWindow;
+let server;
 
 function createWindow() {
   // Crear la ventana principal de la aplicación
@@ -34,11 +31,21 @@ function createWindow() {
   });
 
   if (express) {
-    // Si express está disponible, usamos el servidor express
+    // Si express está disponible, usamos el servidor local
     createExpressServer();
   } else {
-    // Si express no está disponible (versión portable), usamos un servidor HTTP básico
-    createBasicServer();
+    // Si express no está disponible (versión portable), cargamos directamente con file://
+    const indexPath = path.join(__dirname, 'index.html');
+    console.log(`Cargando directamente desde: ${indexPath}`);
+    mainWindow.loadFile(indexPath);
+    
+    // Mostrar la ventana cuando esté lista
+    mainWindow.once('ready-to-show', () => {
+      mainWindow.show();
+      if (process.platform === 'darwin') {
+        app.dock.show();
+      }
+    });
   }
 
   // Configurar el menú
@@ -92,7 +99,7 @@ function createExpressServer() {
   // Iniciar el servidor en un puerto disponible
   server = expressApp.listen(0, 'localhost', () => {
     const port = server.address().port;
-    console.log(`Servidor Express iniciado en puerto ${port}`);
+    console.log(`Servidor local iniciado en puerto ${port}`);
     
     // Cargar la aplicación
     mainWindow.loadURL(`http://localhost:${port}`);
@@ -107,147 +114,6 @@ function createExpressServer() {
       }
     });
   });
-}
-
-function createBasicServer() {
-  const urlModule = require('url');
-  const getMimeType = (filePath) => {
-    const ext = path.extname(filePath).toLowerCase();
-    const types = {
-      '.html': 'text/html; charset=utf-8',
-      '.js': 'application/javascript',
-      '.css': 'text/css',
-      '.json': 'application/json',
-      '.svg': 'image/svg+xml',
-      '.png': 'image/png',
-      '.jpg': 'image/jpeg',
-      '.jpeg': 'application/jpeg',
-      '.gif': 'image/gif',
-      '.ico': 'image/x-icon',
-      '.woff': 'font/woff',
-      '.woff2': 'font/woff2',
-      '.ttf': 'font/ttf',
-      '.gz': 'application/gzip',
-      '.map': 'application/octet-stream'
-    };
-    return types[ext] || 'application/octet-stream';
-  };
-
-  server = http.createServer((req, res) => {
-    const pathname = urlModule.parse(req.url).pathname;
-    const safePath = pathname === '/' ? 'index.html' : pathname;
-    const filePath = path.join(__dirname, safePath);
-
-    // CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    if (req.method === 'OPTIONS') {
-      res.writeHead(200);
-      res.end();
-      return;
-    }
-
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        console.error(`Error loading file: ${filePath}`, err.message);
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('File not found');
-        return;
-      }
-      res.writeHead(200, { 'Content-Type': getMimeType(filePath) });
-      res.end(data);
-    });
-  });
-
-  server.listen(0, 'localhost', () => {
-    const port = server.address().port;
-    console.log(`Servidor HTTP iniciado en puerto ${port}`);
-    mainWindow.loadURL(`http://localhost:${port}`);
-    mainWindow.once('ready-to-show', () => {
-      mainWindow.show();
-      console.log('Ventana mostrada');
-    });
-    mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
-      console.error('Error cargando página:', errorCode, errorDescription, validatedURL);
-    });
-    if (process.argv.includes('--dev')) {
-      mainWindow.webContents.openDevTools();
-    }
-  });
-
-  server.on('error', (err) => {
-    console.error('Error en el servidor:', err);
-  });
-}
-
-// Función para manejar solicitudes POST
-function handlePostRequest(req, res) {
-  let body = '';
-  
-  req.on('data', chunk => {
-    body += chunk.toString();
-    // Limitar el tamaño del cuerpo para evitar ataques de desbordamiento
-    if (body.length > 1e6) {
-      body = "";
-      res.writeHead(413);
-      res.end('Payload Too Large');
-      req.connection.destroy();
-    }
-  });
-  
-  req.on('end', () => {
-    try {
-      console.log(`Procesando solicitud POST: ${req.url}`);
-      const urlObj = new URL(req.url, 'http://localhost');
-      const pathname = decodeURIComponent(urlObj.pathname);
-      
-      // Manejar distintos endpoints POST
-      if (pathname === '/api/save') {
-        // Simular guardado local para versión portable
-        console.log('Simulando guardado local...');
-        res.setHeader('Content-Type', 'application/json');
-        res.writeHead(200);
-        res.end(JSON.stringify({ success: true, message: "Archivo guardado localmente" }));
-      } else if (pathname.startsWith('/api/')) {
-        // Manejar otras API endpoints
-        handleApiRequest(req, res, pathname, body);
-      } else {
-        res.writeHead(404);
-        res.end(JSON.stringify({ success: false, message: "Endpoint no encontrado" }));
-      }
-    } catch (error) {
-      console.error(`Error al procesar solicitud POST:`, error);
-      res.writeHead(500);
-      res.end(JSON.stringify({ success: false, message: error.message }));
-    }
-  });
-}
-
-// Función para manejar solicitudes API
-function handleApiRequest(req, res, pathname, body = null) {
-  console.log(`Manejando API request: ${pathname}`);
-  
-  // Implementar simulaciones de API específicas según sea necesario
-  if (pathname === '/api/version') {
-    res.setHeader('Content-Type', 'application/json');
-    res.writeHead(200);
-    res.end(JSON.stringify({ version: "2.1.0-portable" }));
-  } else if (pathname === '/api/debug') {
-    res.setHeader('Content-Type', 'application/json');
-    res.writeHead(200);
-    res.end(JSON.stringify({ 
-      portable: true, 
-      platform: process.platform,
-      arch: process.arch,
-      nodeVersion: process.version,
-      electronVersion: process.versions.electron
-    }));
-  } else {
-    // Endpoint API no implementado
-    res.writeHead(501);
-    res.end(JSON.stringify({ success: false, message: "API no implementada en modo portable" }));
-  }
 }
 
 function createMenu() {
@@ -322,7 +188,7 @@ function createMenu() {
               type: 'info',
               title: 'Acerca de',
               message: 'Fantasy Map Generator',
-              detail: 'Generador de mapas fantásticos de Azgaar\\nVersión de Escritorio\\n\\nCreado por Azgaar\\nPortado a Electron'
+              detail: 'Generador de mapas fantásticos de Azgaar\nVersión de Escritorio\n\nCreado por Azgaar\nPortado a Electron'
             });
           }
         },
@@ -381,31 +247,9 @@ app.whenReady().then(() => {
 
 // Salir cuando todas las ventanas están cerradas
 app.on('window-all-closed', () => {
-  // Cerrar el servidor si existe
-  if (server) {
-    try {
-      server.close();
-      console.log('Servidor HTTP cerrado correctamente.');
-    } catch (error) {
-      console.error('Error al cerrar el servidor:', error);
-    }
-  }
-  
   // En macOS, es común que las aplicaciones permanezcan activas hasta que el usuario salga explícitamente
   if (process.platform !== 'darwin') {
     app.quit();
-  }
-});
-
-// Asegurarse de que el servidor se cierre al salir
-app.on('will-quit', () => {
-  if (server) {
-    try {
-      server.close();
-      console.log('Servidor HTTP cerrado al salir.');
-    } catch (error) {
-      console.error('Error al cerrar el servidor durante el cierre:', error);
-    }
   }
 });
 

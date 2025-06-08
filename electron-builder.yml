@@ -1,0 +1,30 @@
+appId: com.azgaar.fantasy-map-generator
+productName: Fantasy Map Generator
+directories:
+  output: dist
+files:
+  - "**/*"
+  - "!node_modules"
+  - "!dist"
+  - "!.git"
+  - "!.github"
+  - "!.docker"
+  - "!.vscode"
+  - "!README.md" 
+  - "!LICENSE"
+  - "!*.md"
+win:
+  target: 
+    - portable
+  icon: images/icons/icon_x512.png
+linux:
+  target: 
+    - zip
+    - deb
+  executableName: fantasy-map-generator
+  artifactName: "${productName}-${version}.${ext}"
+  icon: images/icons/icon_x512.png
+  category: Graphics
+  synopsis: Fantasy Map Generator
+  description: Create fantasy maps with this powerful map generator tool
+forceCodeSigning: false
